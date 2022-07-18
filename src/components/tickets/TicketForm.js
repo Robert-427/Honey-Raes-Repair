@@ -34,7 +34,7 @@ export const TicketForm = () => {
         const ticketToSendToAPI = {
             userId: honeyUserObject.id,
             description: ticket.description,
-            emergenty: ticket.emergency,
+            emergency: ticket.emergency,
             dateCompleted: ""
         }
 
