@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { Ticket } from "./Ticket"
 import "./Tickets.css"
 
 export const TicketList = ({ searchTermState }) => {
     const [tickets, setTickets] = useState([])
+    const [employees, setEmployees] = useState([])
     const [filteredTickets, setFilteredTickets] = useState([])
     const [emergency, setEmergency] = useState(false)
     const [openOnly, updateOpenOnly] = useState(false)
@@ -19,7 +21,7 @@ export const TicketList = ({ searchTermState }) => {
             })
             setFilteredTickets(searchedTickets)
         },
-        [ searchTermState ]
+        [searchTermState]
     )
 
     useEffect(
@@ -36,13 +38,19 @@ export const TicketList = ({ searchTermState }) => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/serviceTickets`)
+            fetch(`http://localhost:8088/serviceTickets?_embed=employeeTickets`)
                 .then(response => response.json())
                 .then((ticketArray) => {
                     setTickets(ticketArray)
                 })
+
+            fetch(`http://localhost:8088/employees?_expand=user`)
+                .then(response => response.json())
+                .then((employeeArray) => {
+                    setEmployees(employeeArray)
+                })
         },
-        [] // When this array is empty, you are observing initial component state
+        []
     )
 
     useEffect(
@@ -93,12 +101,7 @@ export const TicketList = ({ searchTermState }) => {
         <article className="tickets">
             {
                 filteredTickets.map(
-                    (ticket) => {
-                        return <section className="ticket" key={`ticket--${ticket.id}`}>
-                            <header>{ticket.description}</header>
-                            <footer>Emergency: {ticket.emergency ? "EMERGENCY" : "No"}</footer>
-                        </section>
-                    }
+                    (ticket) => <Ticket employees={employees} isStaff={honeyUserObject.staff} ticketObject={ticket} />
                 )
             }
         </article>

@@ -13,4 +13,3 @@ export const NavBar = () => {
         return <CustomerNav />
     }
 }
-
