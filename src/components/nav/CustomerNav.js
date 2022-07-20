@@ -1,27 +1,32 @@
-import { Link, useNavigate } from "react-router-dom"
+import React, { useState } from "react";
+import { Navbar, Collapse, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from "reactstrap";
 import "./NavBar.css"
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export const CustomerNav = () => {
-    const navigate = useNavigate()
+    const [collapsed, setCollapsed] = useState(true);
+
+    const toggleNavbar = () => setCollapsed(!collapsed);
 
     return (
-        <ul className="navbar">
-            <li className="navbar__item active">
-                <Link className="navbar__link" to="/tickets">Tickets</Link>
-            </li>
-            <li className="navbar__item navbar_logout">
-                <Link className="navbar__link" to="/profile">Profile</Link>
-            </li>
-            {
-                localStorage.getItem("honey_user")
-                    ? <li className="navbar__item navbar__logout">
-                        <Link className="navbar__link" to="" onClick={() => {
-                            localStorage.removeItem("honey_user")
-                            navigate("/", {replace: true})
-                        }}>Logout</Link>
-                    </li>
-                    : ""
-            }
-        </ul>
+        <div>
+            <Navbar color="faded" light>
+                <NavbarBrand href="/" className="me-auto">Honey Rae's</NavbarBrand>
+                <NavbarToggler onClick={toggleNavbar} className="me-2" />
+                <Collapse isOpen={!collapsed} navbar>
+                    <Nav navbar >
+                        <NavItem>
+                            <NavLink href="/tickets" className='border-bottom m-0'>Tickets</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="/profile" className='border-bottom m-0'>Profile</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="" onClick={() => { localStorage.removeItem("honey_user") }}>Logout</NavLink>
+                        </NavItem>
+                    </Nav>
+                </Collapse>
+            </Navbar>
+        </div>
     )
 }
